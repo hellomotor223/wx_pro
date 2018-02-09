@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- namespace：命名空间，用于隔离sql，还有一个很重要的作用，后面会讲 -->
+<mapper namespace="com.hei2hei.wx_project.dao.AreaDao">
+
+    <!--
+        动态代理的开发规范
+            1: 映射文件的namespace必须等于接口的全路径名称
+            2: 映射文件的sql唯一标示,必须等于接口的方法名称
+            3: 映射文件的parameterType必须等于接口方法的参数类型
+            4: 映射文件resultType必须等于接口方法的返回类型
+     -->
+
+    <select id="queryArea" resultType="com.hei2hei.wx_project.entity.Area">
+        SELECT
+            a.area_id,
+            a.area_name,
+            a.priority,
+            a.create_time,
+            a.last_edit_time
+        FROM
+            tb_area a
+        ORDER BY a.priority
+        DESC
+    </select>
+
+    <select id="queryAreaById" resultType="com.hei2hei.wx_project.entity.Area">
+        SELECT
+        a.area_id,
+        a.area_name,
+        a.priority,
+        a.create_time,
+        a.last_edit_time
+        FROM
+        tb_area a
+        WHERE a.area_id=#{areaId}
+    </select>
+
+    <insert id="insertArea" useGeneratedKeys="true" keyProperty="areaId"
+            keyColumn="area_id" parameterType="com.hei2hei.wx_project.entity.Area" >
+        INSERT INTO
+        tb_area(area_name,priority,create_time,last_edit_time)
+        VALUES(#{areaName},#{priority},#{createTime},#{lastEditTime})
+    </insert>
+    
+    <update id="updateArea" parameterType="com.hei2hei.wx_project.entity.Area" >
+        UPDATE  tb_area
+        <set>
+            <if test="areaName!=null">area_name=#{areaName},</if>
+            <if test="priority!=null">priority=#{priority},</if>
+            <if test="lastEditTime!=null">last_edit_time=#{lastEditTime},</if>
+        </set>
+        WHERE area_id=#{areaId}
+    </update>
+    <delete id="deleteArea">
+        DELETE FROM tb_area
+        WHERE area_id=#{areaId}
+    </delete>
+</mapper>
